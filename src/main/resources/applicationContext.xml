@@ -3,15 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- 指定spring扫描路径，可以选择性过滤，默认是路径下全扫描-->
     <context:component-scan base-package="ssh.*"/>
@@ -38,10 +35,16 @@
                 <prop key="hibernate.show_sql">true</prop><!-- 是否展示SQL -->
                 <prop key="hibernate.hbm2ddl.auto">update</prop><!-- 是否自动创建表结构 -->
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="hibernate.connection.autocommit">true</prop><!-- 是否自动提交到数据库 -->
             </props>
         </property>
         <!-- 扫描并加载注解过的实体类 -->
         <property name="packagesToScan" value="ssh.*.model"/>
+        <!--<property name="mappingResources" >-->
+            <!--<list>-->
+                <!--<value>ssh/product/model/trends/Commentity.hbm.xml</value>-->
+            <!--</list>-->
+        <!--</property>-->
     </bean>
     <!-- service注入配置 -->
     <bean id="TrendsAction" class="ssh.product.action.trends.TrendsAction" scope="prototype">
@@ -50,6 +53,10 @@
     <bean id="CollectAction" class="ssh.product.action.trends.CollectAction" scope="prototype">
         <property name="collectEntityService" ref="collectEntityService"/>
     </bean>
+    <!--  scope为prototype的bean,容器在接受到该类型的对象的请求的时候,会每次都重新生成一个新的对象给请求方 -->
+    <bean id="CommentAction" class="ssh.product.action.trends.CommentAction" scope="prototype">
+        <property name="commentEntityService" ref="commentEntityService"/>
+    </bean>
     <!-- dao注入配置 -->
     <bean id="trendsEntityService" class="ssh.product.service.impl.TrendsEntityServiceImpl" >
         <property name="trendsEntityDao" ref="rendsEntityDao"/>
@@ -57,11 +64,17 @@
     <bean id="collectEntityService" class="ssh.product.service.impl.CollectEntityServiceImpl" >
         <property name="collectEntityDao" ref="collectEntityDao"/>
     </bean>
+    <bean id="commentEntityService" class="ssh.product.service.impl.CommentEntityServiceImpl">
+        <property name="commentEntityDao" ref="commentEntityDao"/>
+    </bean>
     <!-- session注入配置 -->
     <bean id="rendsEntityDao" class="ssh.product.dao.impl.TrendsEntityDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="collectEntityDao" class="ssh.product.dao.impl.CollectEntityDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="commentEntityDao" class="ssh.product.dao.impl.CommentEntityDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

@@ -4,11 +4,11 @@
         "http://struts.apache.org/dtds/struts-2.5.dtd">
 <struts>
 
-    <!-- 默认访问页面 -->
+     <!--默认访问页面 -->
     <package name="default" extends="struts-default" namespace="/">
         <default-action-ref name="default"/>
         <action name="default">
-            <result>/WEB-INF/enter.html</result>
+            <result>enter.html</result>
         </action>
     </package>
     <package name="login" extends="struts-default" namespace="/"  strict-method-invocation="false">
@@ -47,6 +47,14 @@
                 <param name="root">result</param>
             </result>
             <!--<result name="loginview">WEB-INF/view/login/login.jsp</result>-->
+        </action>
+        <action name="Comment*Action" class="ssh.product.action.trends.CommentAction" method="{1}">
+            <result name="clist">WEB-INF/view/comment/comment.jsp</result>
+            <result name="isDel">WEB-INF/view/comment/deletecomment.jsp</result>
+            <result name="cdelete" type="json">result</result>
+            <result name="writec">WEB-INF/view/comment/writecomment.jsp</result>
+            <result name="writeto" type="json">result</result>
+            <result name="wTyTrend">WEB-INF/view/comment/writecomment.jsp</result>
         </action>
     </package>
 
